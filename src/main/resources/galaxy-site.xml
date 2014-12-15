@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+  <property>
+    <name>galaxy.fds.server.base.uri</name>
+    <value>http://files.fds.api.xiaomi.com/</value>
+  </property>
+
+  <property>
+    <name>fs.fds.AccessKey</name>
+    <value>${your_fds_access_key}</value>
+  </property>
+
+  <property>
+    <name>fs.fds.AccessSecret</name>
+    <value>${your_fds_access_secret}</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.secret.id</name>
+    <value>${your_sds_secret_id}</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.secret.key</name>
+    <value>${your_sds_secret_key}</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.rest.endpoint</name>
+    <value>https://sds.api.xiaomi.com</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.rest.admin.path</name>
+    <value>/v1/api/admin</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.rest.table.path</name>
+    <value>/v1/api/table</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.input.table.name</name>
+    <value>${input_table_name}</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.output.table.name</name>
+    <value>${output_table_name}</value>
+  </property>
+
+  <property>
+    <name>galaxy.mr.sds.scan.limit</name>
+    <value>200</value>
+  </property>
+</configuration>

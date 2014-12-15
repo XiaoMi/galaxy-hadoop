@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+bin=`which $0`
+bin=`dirname $bin`
+bin=`cd "$bin"; pwd`
+
+function print_usage() {
+  echo -e "Usage: fds COMMAND"
+  echo -e "       where COMMAND is one of:"
+  echo -e "fs     run a filesystem like shell of FDS"
+  echo -e "admin  run a FDS admin client"
+  echo -e "\nMost commands print help when invoked w/o parameters"
+}
+
+if [ $# -eq 0 ]; then
+  print_usage
+  exit -1
+fi
+
+command=$1
+shift 1
+
+case $command in
+  (fs)
+    class="org.apache.hadoop.fs.FsShell"
+  ;;
+  (admin)
+    class="com.xiaomi.infra.galaxy.hadoop.fs.shell.FDSAdmin"
+  ;;
+  (*)
+    echo "[31;1mInvalid command: $command[0m"
+    exit -3
+  ;;
+esac
+
+root_dir=`dirname $bin`
+lib_dir=$root_dir/lib
+conf_dir=$root_dir/conf
+
+class_path=$conf_dir
+for jar in $root_dir/galaxy-hadoop-*.jar; do
+  class_path=$class_path:$jar
+done
+
+for jar in $lib_dir/*.jar; do
+  class_path=$class_path:$jar
+done
+
+exec java -cp $class_path $class $@

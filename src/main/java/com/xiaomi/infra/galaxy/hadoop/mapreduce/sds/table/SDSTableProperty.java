@@ -1,22 +1,21 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableUtils;
-
-import com.xiaomi.infra.galaxy.hadoop.SDSConfiguration;
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSConfiguration;
 import com.xiaomi.infra.galaxy.sds.client.ClientFactory;
 import com.xiaomi.infra.galaxy.sds.thrift.AdminService;
 import com.xiaomi.infra.galaxy.sds.thrift.CommonConstants;
 import com.xiaomi.infra.galaxy.sds.thrift.Credential;
 import com.xiaomi.infra.galaxy.sds.thrift.TableService;
 import com.xiaomi.infra.galaxy.sds.thrift.UserType;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableUtils;
 
-public class SDSProperty implements Writable {
+public class SDSTableProperty implements Writable {
   private String endpoint;
   private String restAdminPath;
   private String restTablePath;
@@ -29,7 +28,7 @@ public class SDSProperty implements Writable {
     return endpoint;
   }
 
-  public SDSProperty setEndpoint(String endpoint) {
+  public SDSTableProperty setEndpoint(String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
@@ -38,7 +37,7 @@ public class SDSProperty implements Writable {
     return restAdminPath;
   }
 
-  public SDSProperty setRestAdminPath(String restAdminPath) {
+  public SDSTableProperty setRestAdminPath(String restAdminPath) {
     this.restAdminPath = restAdminPath;
     return this;
   }
@@ -47,7 +46,7 @@ public class SDSProperty implements Writable {
     return restTablePath;
   }
 
-  public SDSProperty setRestTablePath(String restTablePath) {
+  public SDSTableProperty setRestTablePath(String restTablePath) {
     this.restTablePath = restTablePath;
     return this;
   }
@@ -56,7 +55,7 @@ public class SDSProperty implements Writable {
     return secretID;
   }
 
-  public SDSProperty setSecretID(String secretID) {
+  public SDSTableProperty setSecretID(String secretID) {
     this.secretID = secretID;
     return this;
   }
@@ -65,7 +64,7 @@ public class SDSProperty implements Writable {
     return secretKey;
   }
 
-  public SDSProperty setSecretKey(String secretKey) {
+  public SDSTableProperty setSecretKey(String secretKey) {
     this.secretKey = secretKey;
     return this;
   }
@@ -74,12 +73,12 @@ public class SDSProperty implements Writable {
     return clientMaxRetry;
   }
 
-  public SDSProperty setClientMaxRetry(int clientMaxRetry) {
+  public SDSTableProperty setClientMaxRetry(int clientMaxRetry) {
     this.clientMaxRetry = clientMaxRetry;
     return this;
   }
 
-  public void checkSanity(Configuration conf) {
+  public void checkSanityAndSet(Configuration conf) {
     if (endpoint == null) {
       endpoint = conf.get(SDSConfiguration.SDS_MAPREDUCE_REST_ENDPOINT);
       if (endpoint == null) {
@@ -103,17 +102,17 @@ public class SDSProperty implements Writable {
 
     if (restAdminPath == null) {
       restAdminPath = conf.get(SDSConfiguration.SDS_MAPREDUCE_REST_ADMIN_PATH,
-          CommonConstants.ADMIN_SERVICE_PATH);
+                               CommonConstants.ADMIN_SERVICE_PATH);
     }
 
     if (restTablePath == null) {
       restTablePath = conf.get(SDSConfiguration.SDS_MAPREDUCE_REST_TABLE_PATH,
-          CommonConstants.TABLE_SERVICE_PATH);
+                               CommonConstants.TABLE_SERVICE_PATH);
     }
 
     if (clientMaxRetry == null) {
       clientMaxRetry = conf.getInt(SDSConfiguration.SDS_MAPREDUCE_CLIENT_MAX_RETRY,
-          SDSConfiguration.DEFAULT_SDS_MAPREDUCE_CLIENT_MAX_RETRY);
+                                   SDSConfiguration.DEFAULT_SDS_MAPREDUCE_CLIENT_MAX_RETRY);
     }
   }
 

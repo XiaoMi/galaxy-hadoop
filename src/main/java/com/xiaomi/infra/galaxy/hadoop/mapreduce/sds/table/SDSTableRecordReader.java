@@ -1,35 +1,35 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSRecordWritable;
+import com.xiaomi.infra.galaxy.sds.client.TableScanner;
+import com.xiaomi.infra.galaxy.sds.thrift.Datum;
+import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest;
+import com.xiaomi.infra.galaxy.sds.thrift.TableService;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
-import com.xiaomi.infra.galaxy.sds.client.TableScanner;
-import com.xiaomi.infra.galaxy.sds.thrift.Datum;
-import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest;
-import com.xiaomi.infra.galaxy.sds.thrift.TableService;
-
-public class GalaxySDSRecordReader extends RecordReader<NullWritable, SDSRecord> {
-  private SDSRecord value;
+public class SDSTableRecordReader extends RecordReader<NullWritable, SDSRecordWritable> {
+  private SDSRecordWritable value;
   private TableScanner scanner;
   private Iterator<Map<String, Datum>> iterator;
 
   @Override
   public void initialize(InputSplit split, TaskAttemptContext context) throws IOException,
       InterruptedException {
-    if (!(split instanceof GalaxySDSSplit)) {
+    if (!(split instanceof SDSTableSplit)) {
       throw new IOException("Error split instance");
     }
 
-    value = new SDSRecord();
-    GalaxySDSSplit galaxySplit = (GalaxySDSSplit)split;
-    TableScan scan = galaxySplit.getScan();
-    SDSProperty sdsProperty = scan.getSDSProperty();
+    value = new SDSRecordWritable();
+    SDSTableSplit galaxySplit = (SDSTableSplit) split;
+    SDSTableScan scan = galaxySplit.getScan();
+    SDSTableProperty sdsProperty = scan.getSDSProperty();
     TableService.Iface tableClient = sdsProperty.formTableClient();
 
     ScanRequest scanRequest = scan.getScanRequest();
@@ -45,7 +45,7 @@ public class GalaxySDSRecordReader extends RecordReader<NullWritable, SDSRecord>
   @Override
   public boolean nextKeyValue() throws IOException, InterruptedException {
     if (iterator.hasNext()) {
-      this.value.setValues(iterator.next());
+      this.value.setRecord(iterator.next());
       return true;
     } else {
       return false;
@@ -59,7 +59,7 @@ public class GalaxySDSRecordReader extends RecordReader<NullWritable, SDSRecord>
   }
 
   @Override
-  public SDSRecord getCurrentValue() throws IOException, InterruptedException {
+  public SDSRecordWritable getCurrentValue() throws IOException, InterruptedException {
     return value;
   }
 

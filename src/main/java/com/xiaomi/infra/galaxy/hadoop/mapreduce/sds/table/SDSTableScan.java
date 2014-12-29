@@ -1,9 +1,10 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest;
 import libthrift091.TDeserializer;
 import libthrift091.TException;
 import libthrift091.TSerializer;
@@ -11,32 +12,30 @@ import libthrift091.protocol.TCompactProtocol;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 
-import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest;
-
-public class TableScan implements Writable {
+public class SDSTableScan implements Writable {
   private ScanRequest scanRequest;
-  private SDSProperty sdsProperty;
+  private SDSTableProperty sdsProperty;
 
-  public TableScan() {
+  public SDSTableScan() {
     this.scanRequest = new ScanRequest();
-    this.sdsProperty = new SDSProperty();
+    this.sdsProperty = new SDSTableProperty();
   }
 
-  public TableScan(ScanRequest scanRequest, SDSProperty sdsProperty) {
+  public SDSTableScan(ScanRequest scanRequest, SDSTableProperty sdsProperty) {
     this.scanRequest = scanRequest;
     this.sdsProperty = sdsProperty;
   }
 
-  public TableScan(ScanRequest scanRequest) {
+  public SDSTableScan(ScanRequest scanRequest) {
     this.scanRequest = scanRequest;
-    this.sdsProperty = new SDSProperty();
+    this.sdsProperty = new SDSTableProperty();
   }
 
   public ScanRequest getScanRequest() {
     return scanRequest;
   }
 
-  public SDSProperty getSDSProperty() {
+  public SDSTableProperty getSDSProperty() {
     return sdsProperty;
   }
 

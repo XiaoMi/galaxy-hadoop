@@ -1,32 +1,32 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Map;
 
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSRecordWritable;
+import com.xiaomi.infra.galaxy.sds.thrift.Datum;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.mapreduce.InputSplit;
 
-import com.xiaomi.infra.galaxy.sds.thrift.Datum;
+public class SDSTableSplit extends InputSplit
+    implements Writable {
 
-public class GalaxySDSSplit extends InputSplit
-implements Writable {
-
-  private TableScan scan = null;
-  private GalaxySDSSplitKey startRow = null;
-  private GalaxySDSSplitKey stopRow = null;
+  private SDSTableScan scan = null;
+  private SDSRecordWritable startRow = null;
+  private SDSRecordWritable stopRow = null;
   private String regionLocation = null;
 
-  public GalaxySDSSplit() {
+  public SDSTableSplit() {
   }
 
-  public GalaxySDSSplit(TableScan scan, Map<String, Datum> startRow, Map<String, Datum> endRow,
-                        String regionLocation) {
+  public SDSTableSplit(SDSTableScan scan, Map<String, Datum> startRow, Map<String, Datum> stopRow,
+                       String regionLocation) {
     this.scan = scan;
-    this.startRow = new GalaxySDSSplitKey(startRow);
-    this.stopRow = new GalaxySDSSplitKey(endRow);
+    this.startRow = new SDSRecordWritable(startRow);
+    this.stopRow = new SDSRecordWritable(stopRow);
     this.regionLocation = regionLocation;
   }
 
@@ -37,21 +37,21 @@ implements Writable {
 
   @Override
   public String[] getLocations() throws IOException {
-    return new String[]{regionLocation};
+    return new String[] { regionLocation };
   }
 
-  public TableScan getScan() {
+  public SDSTableScan getScan() {
     return scan;
   }
 
   public Map<String, Datum> getStartRow() {
-    return startRow.getRowKey();
+    return startRow.getRecord();
   }
 
   public Map<String, Datum> getStopRow() {
-    return stopRow.getRowKey();
+    return stopRow.getRecord();
   }
-  
+
   @Override
   public void write(DataOutput out) throws IOException {
     scan.write(out);
@@ -62,17 +62,17 @@ implements Writable {
 
   @Override
   public void readFields(DataInput in) throws IOException {
-    TableScan tmpScan = new TableScan();
+    SDSTableScan tmpScan = new SDSTableScan();
     tmpScan.readFields(in);
 
     scan = tmpScan;
-    startRow = new GalaxySDSSplitKey();
+    startRow = new SDSRecordWritable();
     startRow.readFields(in);
-    stopRow = new GalaxySDSSplitKey();
+    stopRow = new SDSRecordWritable();
     stopRow.readFields(in);
     regionLocation = WritableUtils.readCompressedString(in);
   }
-  
+
   @Override
   public String toString() {
     return "Galaxy SDS splits " + scan + " : " + startRow + " : " + stopRow;

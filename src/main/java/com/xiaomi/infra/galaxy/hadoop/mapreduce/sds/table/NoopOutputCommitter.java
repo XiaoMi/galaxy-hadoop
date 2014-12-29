@@ -1,5 +1,4 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
-
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.IOException;
 
@@ -10,7 +9,12 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 /**
  * Small committer class that does not do anything.
  */
-public class TableOutputCommitter extends OutputCommitter {
+public class NoopOutputCommitter extends OutputCommitter {
+  private static NoopOutputCommitter INSTANCE = new NoopOutputCommitter();
+
+  public static NoopOutputCommitter getInstance() {
+    return INSTANCE;
+  }
 
   @Override
   public void abortTask(TaskAttemptContext arg0) throws IOException {

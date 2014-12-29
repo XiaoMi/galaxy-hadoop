@@ -1,4 +1,4 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -7,23 +7,23 @@ import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 
-public class TableOutput implements Writable {
+public class SDSTableOutput implements Writable {
   private String tableName;
-  private SDSProperty sdsProperty;
+  private SDSTableProperty sdsProperty;
 
-  public TableOutput() {
+  public SDSTableOutput() {
     this.tableName = new String();
-    this.sdsProperty = new SDSProperty();
+    this.sdsProperty = new SDSTableProperty();
   }
 
-  public TableOutput(String tableName, SDSProperty sdsProperty) {
+  public SDSTableOutput(String tableName, SDSTableProperty sdsProperty) {
     this.tableName = tableName;
     this.sdsProperty = sdsProperty;
   }
 
-  public TableOutput(String tableName) {
+  public SDSTableOutput(String tableName) {
     this.tableName = tableName;
-    this.sdsProperty = new SDSProperty();
+    this.sdsProperty = new SDSTableProperty();
   }
 
   public String getTableName() {
@@ -34,12 +34,11 @@ public class TableOutput implements Writable {
     this.tableName = tableName;
   }
 
-
-  public SDSProperty getSDSProperty() {
+  public SDSTableProperty getSDSProperty() {
     return sdsProperty;
   }
 
-  public void setSDSProperty(SDSProperty sdsProperty) {
+  public void setSDSProperty(SDSTableProperty sdsProperty) {
     this.sdsProperty = sdsProperty;
   }
 

@@ -1,27 +1,27 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
-import com.xiaomi.infra.galaxy.sds.thrift.Datum;
+import java.io.IOException;
+
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSMapReduceUtil;
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSRecordWritable;
 import com.xiaomi.infra.galaxy.sds.thrift.TableService;
-
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.JobContext;
+import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import java.io.IOException;
-import java.util.Map;
 
-public class GalaxySDSOutputFormat extends OutputFormat<NullWritable, Map<String, Datum>>
+public class SDSTableOutputFormat extends OutputFormat<NullWritable, SDSRecordWritable>
     implements Configurable {
   public static String OUTPUT_TABLE = "sds.mapreduce.output.table";
   public static String BATCH_NUM = "sds.mapreduce.output.batch.number";
   public static int DEFAULT_BATCH_NUM = 1;
 
   Configuration conf = null;
-  TableOutput tableOutput = null;
+  SDSTableOutput tableOutput = null;
   int batchNum;
 
   @Override
@@ -30,7 +30,7 @@ public class GalaxySDSOutputFormat extends OutputFormat<NullWritable, Map<String
 
     String outputString = conf.get(OUTPUT_TABLE);
     try {
-      tableOutput = TableMapReduceUtil.convertStringToTableOutput(outputString);
+      tableOutput = SDSMapReduceUtil.convertStringToTableOutput(outputString);
     } catch (IOException e) {
       throw new RuntimeException("Failed to convert TableOutput string: " + outputString, e);
     }
@@ -44,11 +44,11 @@ public class GalaxySDSOutputFormat extends OutputFormat<NullWritable, Map<String
   }
 
   @Override
-  public RecordWriter<NullWritable, Map<String, Datum>> getRecordWriter(TaskAttemptContext context)
+  public RecordWriter<NullWritable, SDSRecordWritable> getRecordWriter(TaskAttemptContext context)
       throws IOException, InterruptedException {
-    SDSProperty sdsProperty = tableOutput.getSDSProperty();
+    SDSTableProperty sdsProperty = tableOutput.getSDSProperty();
     TableService.Iface tableClient = sdsProperty.formTableClient();
-    return new GalaxySDSRecordWriter(tableClient, tableOutput.getTableName(), batchNum);
+    return new SDSTableRecordWriter(tableClient, tableOutput.getTableName(), batchNum);
   }
 
   @Override
@@ -59,7 +59,7 @@ public class GalaxySDSOutputFormat extends OutputFormat<NullWritable, Map<String
   @Override
   public OutputCommitter getOutputCommitter(TaskAttemptContext context)
       throws IOException, InterruptedException {
-    return new TableOutputCommitter();
+    return NoopOutputCommitter.getInstance();
   }
 
 }

@@ -1,5 +1,10 @@
-package com.xiaomi.infra.galaxy.hadoop.mapreduce;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSRecordWritable;
 import com.xiaomi.infra.galaxy.sds.thrift.BatchOp;
 import com.xiaomi.infra.galaxy.sds.thrift.BatchRequest;
 import com.xiaomi.infra.galaxy.sds.thrift.BatchRequestItem;
@@ -7,25 +12,18 @@ import com.xiaomi.infra.galaxy.sds.thrift.PutRequest;
 import com.xiaomi.infra.galaxy.sds.thrift.Request;
 import com.xiaomi.infra.galaxy.sds.thrift.TableService;
 import libthrift091.TException;
-import com.xiaomi.infra.galaxy.sds.thrift.Datum;
-
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-public class GalaxySDSRecordWriter extends RecordWriter<NullWritable, Map<String, Datum>> {
+public class SDSTableRecordWriter extends RecordWriter<NullWritable, SDSRecordWritable> {
   private TableService.Iface tableClient = null;
   private String tableName = null;
   private int batchNum = 0;
   List<PutRequest> puts;
   boolean clientError = false;
 
-  public GalaxySDSRecordWriter(TableService.Iface tableClient, String tableName, int batchNum) {
+  public SDSTableRecordWriter(TableService.Iface tableClient, String tableName, int batchNum) {
     this.tableClient = tableClient;
     this.tableName = tableName;
     this.batchNum = batchNum;
@@ -38,9 +36,9 @@ public class GalaxySDSRecordWriter extends RecordWriter<NullWritable, Map<String
   }
 
   @Override
-  public void write(NullWritable nullWritable, Map<String, Datum> record)
+  public void write(NullWritable nullWritable, SDSRecordWritable record)
       throws IOException, InterruptedException {
-    PutRequest putRequest = new PutRequest(tableName, record);
+    PutRequest putRequest = new PutRequest(tableName, record.getRecord());
     puts.add(putRequest);
     if (batchNum <= 1 || puts.size() >= batchNum) {
       flush();

@@ -1,4 +1,4 @@
-package com.xiaomi.infra.galaxy.hadoop;
+package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ public class SDSConfiguration {
   public static final String SDS_MAPREDUCE_SECRET_KEY = "sds.mapreduce.secret.key";
   public static final String SDS_MAPREDUCE_CLIENT_MAX_RETRY = "sds.mapreduce.client.max.retry";
   public static int DEFAULT_SDS_MAPREDUCE_SCAN_LIMIT = 1000;
-  public static int DEFAULT_SDS_MAPREDUCE_CLIENT_MAX_RETRY = 5;
+  public static int DEFAULT_SDS_MAPREDUCE_CLIENT_MAX_RETRY = 10;
 
   public static Configuration create() {
     Configuration conf = new Configuration();

@@ -54,7 +54,7 @@ public class SDSTest extends Configured implements Tool {
       Map<String, Datum> record = new HashMap<String, Datum>();
       record.put("productId", DatumUtil.toDatum(key.toString()));
       record.put("counter", DatumUtil.toDatum(sum));
-      context.write(NullWritable.get(), record);
+      context.write(NullWritable.get(), new SDSRecordWritable(record));
     }
   }
 

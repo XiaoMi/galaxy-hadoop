@@ -38,7 +38,7 @@ public class SDSTableRecordWriter extends RecordWriter<NullWritable, SDSRecordWr
   @Override
   public void write(NullWritable nullWritable, SDSRecordWritable record)
       throws IOException, InterruptedException {
-    PutRequest putRequest = new PutRequest(tableName, record.getRecord());
+    PutRequest putRequest = new PutRequest().setTableName(tableName).setRecord(record.getRecord());
     puts.add(putRequest);
     if (batchNum <= 1 || puts.size() >= batchNum) {
       flush();

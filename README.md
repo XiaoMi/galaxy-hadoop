@@ -12,7 +12,7 @@ mvn clean install
     <dependency>
       <groupId>com.xiaomi.infra.galaxy</groupId>
       <artifactId>galaxy-hadoop</artifactId>
-      <version>1.4-SNAPSHOT</version>
+      <version>1.5-SNAPSHOT</version>
     </dependency>
 ```
 
@@ -31,7 +31,7 @@ mvn clean install
     <dependency>
       <groupId>com.xiaomi.infra.galaxy</groupId>
       <artifactId>galaxy-hadoop</artifactId>
-      <version>1.4-SNAPSHOT</version>
+      <version>1.5-SNAPSHOT</version>
     </dependency>
 ```
 

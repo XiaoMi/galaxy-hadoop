@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xiaomi.infra.galaxy.hadoop.fs.FDSConfiguration;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -54,7 +55,7 @@ public class FDSAdmin extends Configured implements Tool {
     String key = getConf().get(GALAXY_FDS_ACCESS_KEY);
     String secret = getConf().get(GALAXY_FDS_ACCESS_SECRET);
     GalaxyFDSCredential credential = new BasicFDSCredential(key, secret);
-    fdsClient = new GalaxyFDSClient(credential, getConf());
+    fdsClient = new GalaxyFDSClient(credential, FDSConfiguration.getFdsClientConfig(getConf()));
 
     getConf().setQuietMode(true);
     commandFactory = new CommandFactory(getConf());

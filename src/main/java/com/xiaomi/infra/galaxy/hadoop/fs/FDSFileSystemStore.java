@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.Date;
 
 import com.google.common.base.Preconditions;
+import com.xiaomi.infra.galaxy.fds.client.FDSClientConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -50,7 +51,7 @@ public class FDSFileSystemStore implements FileSystemStore {
     // URI eg, fds://ID:SECRET@BUCKET/object
     bucket = uri.getHost();
 
-    fdsClient = new GalaxyFDSClient(credential, conf);
+    fdsClient = new GalaxyFDSClient(credential, FDSConfiguration.getFdsClientConfig(conf));
   }
 
   @Override

@@ -143,7 +143,8 @@ public class SDSTableProperty implements Writable {
         .setSecretKeyId(secretID)
         .setSecretKey(secretKey)
         .setType(UserType.APP_SECRET);
-    ClientFactory clientFactory = new ClientFactory(credential);
+    ClientFactory clientFactory = new ClientFactory();
+    clientFactory.setCredential(credential);
     AdminService.Iface adminClient = clientFactory
         .newAdminClient(endpoint + restAdminPath, clientMaxRetry > 0, clientMaxRetry);
     return adminClient;
@@ -154,7 +155,8 @@ public class SDSTableProperty implements Writable {
         .setSecretKeyId(secretID)
         .setSecretKey(secretKey)
         .setType(UserType.APP_SECRET);
-    ClientFactory clientFactory = new ClientFactory(credential);
+    ClientFactory clientFactory = new ClientFactory();
+    clientFactory.setCredential(credential);
     TableService.Iface tableClient = clientFactory
         .newTableClient(endpoint + restTablePath, clientMaxRetry > 0, clientMaxRetry);
     return tableClient;

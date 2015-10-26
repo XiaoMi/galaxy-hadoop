@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>galaxy.fds.server.base.uri</name>
+    <value>http://files.fds.api.xiaomi.com/</value>
+  </property>
+</configuration>

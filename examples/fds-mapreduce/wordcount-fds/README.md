@@ -1,6 +1,6 @@
 FDS Examples
 ---
-###Prerequisite
+### Prerequisite
 fds-mapreduce job has dependencies on galaxy-hadoop and other XiaoMi github project like galaxy-sdk-java and galaxy-fds-sdk-java, you should mvn install them first.
 ```
 git clone https://github.com/XiaoMi/galaxy-sdk-java.git  
@@ -16,7 +16,7 @@ cd galaxy-hadoop/
 mvn clean install -DskipTests
 ```
 
-###Build
+### Build
 For cluster job
 ```
 cd galaxy-hadoop/examples/fds-mapreduce/wordcount-fds/
@@ -31,10 +31,8 @@ mvn clean package -DskipTests -Phadoop2.4
 Currently, EMR clusters are depolyed with hadoop2.4, but we may support hadoop2.0 in the near future.
 So in the future you can use -Phadoop2.0 for emr cluster with hadoop2.0
 
-###JobSubmission
+### JobSubmission
 ```
 sh run.sh # you must follow comments in run.sh to finish configuration in run.sh before execute this command
 
 ```
-
-

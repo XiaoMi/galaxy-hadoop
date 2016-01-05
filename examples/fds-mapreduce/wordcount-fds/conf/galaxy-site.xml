@@ -4,4 +4,13 @@
     <name>galaxy.fds.server.base.uri</name>
     <value>http://files.fds.api.xiaomi.com/</value>
   </property>
+  <!-- 不同region的fds数据,需要修改region配置 -->
+  <!--
+  <property>
+    <name>galaxy.fds.server.region</name>
+    <value>awsbj0</value>
+    <description>北京2区</description>
+  </property>
+  -->
+
 </configuration>

@@ -21,8 +21,8 @@ public class SDSTableOutputFormat extends OutputFormat<NullWritable, SDSRecordWr
   public static int DEFAULT_BATCH_NUM = 1;
 
   Configuration conf = null;
-  SDSTableOutput tableOutput = null;
-  int batchNum;
+  protected SDSTableOutput tableOutput = null;
+  protected int batchNum;
 
   @Override
   public void setConf(Configuration conf) {

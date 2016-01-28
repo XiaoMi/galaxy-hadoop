@@ -182,7 +182,6 @@
             <includes>
               <include>com.xiaomi.infra.galaxy:galaxy-client-java</include>
               <include>com.xiaomi.infra.galaxy:galaxy-thrift-api</include>
-              <include>com.xiaomi.infra.galaxy:galaxy-authentication</include>
             </includes>
           </artifactSet>
         </configuration>

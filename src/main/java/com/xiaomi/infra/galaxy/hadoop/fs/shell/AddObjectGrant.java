@@ -8,9 +8,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
-import com.xiaomi.infra.galaxy.fds.exception.GalaxyFDSClientException;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList.Grant;
+import com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Grant;
 
 public class AddObjectGrant extends FDSCommand {
 

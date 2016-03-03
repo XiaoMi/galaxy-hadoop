@@ -24,6 +24,36 @@
   </property>
 
   <property>
+    <name>galaxy.fds.server.enableHttps</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.region</name>
+    <value></value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableCdnForUpload</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableCdnForDownload</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableMD5Calculate</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableMetrics</name>
+    <value>false</value>
+  </property>
+
+  <property>
     <name>fs.fds.AccessKey</name>
     <value>${your_fds_access_key}</value>
   </property>

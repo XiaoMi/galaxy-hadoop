@@ -8,7 +8,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
-import com.xiaomi.infra.galaxy.fds.exception.GalaxyFDSClientException;
+import com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException;
 
 public class DeleteBucket extends FDSCommand {
 

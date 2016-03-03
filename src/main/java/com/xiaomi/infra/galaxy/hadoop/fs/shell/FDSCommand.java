@@ -15,10 +15,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.Command;
 
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList.Grant;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList.GrantType;
-import com.xiaomi.infra.galaxy.fds.model.AccessControlList.Permission;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Grant;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.GrantType;
+import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Permission;
 
 public abstract class FDSCommand extends Command {
 

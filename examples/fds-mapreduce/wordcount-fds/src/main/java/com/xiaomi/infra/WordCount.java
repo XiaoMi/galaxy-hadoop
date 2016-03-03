@@ -18,11 +18,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-import com.xiaomi.infra.galaxy.exception.GalaxyException;
-import com.xiaomi.infra.galaxy.fds.client.model.FDSObjectInputStream;
-import com.xiaomi.infra.galaxy.fds.exception.GalaxyFDSClientException;
-import com.xiaomi.infra.galaxy.hadoop.fs.FDSFileSystem;
-
 /**
  * Copyright 2015, Xiaomi.
  * All rights reserved.
@@ -35,7 +30,7 @@ public class WordCount {
   };
 
   public static class TokenizerMapper
-       extends Mapper<Object, Text, Text, IntWritable>{
+      extends Mapper<Object, Text, Text, IntWritable> {
 
     private final static IntWritable one = new IntWritable(1);
     private Text word = new Text();
@@ -46,7 +41,7 @@ public class WordCount {
     }
 
     public void map(Object key, Text value, Context context
-                    ) throws IOException, InterruptedException {
+    ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString());
       while (itr.hasMoreTokens()) {
         word.set(itr.nextToken());
@@ -61,20 +56,20 @@ public class WordCount {
   }
 
   public static class IntSumReducer
-       extends Reducer<Text,IntWritable,Text,IntWritable> {
+      extends Reducer<Text, IntWritable, Text, IntWritable> {
     private IntWritable result = new IntWritable();
     Counter unduplicatedWords;
     boolean isReducer;
 
     protected void setup(Context context
-                       ) throws IOException, InterruptedException {
+    ) throws IOException, InterruptedException {
       unduplicatedWords = context.getCounter(WordCountCounter.UnduplicatedWords);
       isReducer = context.getTaskAttemptID().getTaskType() == TaskType.REDUCE;
     }
 
     public void reduce(Text key, Iterable<IntWritable> values,
-                       Context context
-                       ) throws IOException, InterruptedException {
+        Context context
+    ) throws IOException, InterruptedException {
       int sum = 0;
       if (isReducer) {
         // only counts in reduce phase, not for combine phase
@@ -118,24 +113,14 @@ public class WordCount {
     conf.set("mapreduce.task.profile.reduces", ""); // no reduces
 
     TableMapReduceUtil.addDependencyJars(conf,
-        com.xiaomi.infra.galaxy.exception.GalaxyException.class,
+        com.xiaomi.infra.galaxy.fds.client.exception.GalaxyException.class,
         com.xiaomi.infra.galaxy.fds.client.model.FDSObjectInputStream.class,
-        com.xiaomi.infra.galaxy.fds.exception.GalaxyFDSClientException.class,
+        com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException.class,
         com.xiaomi.infra.galaxy.hadoop.fs.FDSFileSystem.class,
-        javax.ws.rs.core.Configuration.class, // javax.ws.rs-api-2.0.jar
-        javax.annotation.Priority.class, // javax.annotation-api-1.2.jar
-        org.glassfish.hk2.utilities.binding.AbstractBinder.class, // hk2-api-2.2.0-b21.jar
-        org.glassfish.hk2.utilities.cache.Computable.class, // hk2-utils-2.2.0-b21.jar
-        org.jvnet.hk2.external.generator.ServiceLocatorGeneratorImpl.class, // hk2-locator-2.2.0-b21.jar
-        org.glassfish.jersey.client.JerseyClient.class, // jersey-client-2.5.1.jar
-        org.glassfish.jersey.internal.util.collection.Value.class, // jersey-common-2.5.1.jar
-        org.glassfish.jersey.message.filtering.EntityFilteringFeature.class, // jersey-entity-filtering-2.5.1.jar
-        org.glassfish.jersey.moxy.json.MoxyJsonFeature.class,   // jersey-media-moxy-2.5.1.jar
-        org.eclipse.persistence.internal.libraries.antlr.runtime.RecognitionException.class,  // org.eclipse.persistence.antlr-2.5.0.jar
-        org.eclipse.persistence.internal.queries.ContainerPolicy.class, // org.eclipse.persistence.core-2.5.0.jar
-        org.eclipse.persistence.jaxb.rs.MOXyJsonProvider.class, // org.eclipse.persistence.moxy-2.5.0.jar
-        org.apache.hadoop.hbase.util.Bytes.class, // hbase-0.94.3-mdh1.1.0.jar
-        net.sf.cglib.proxy.MethodInterceptor.class // cglib-nodep-2.2.jar
+        org.apache.http.conn.HttpClientConnectionManager.class, // httpclient-4.3.3
+        org.apache.http.config.RegistryBuilder.class,   // httpcore-4.3.3
+        com.google.gson.Gson.class,
+        org.apache.hadoop.hbase.util.Bytes.class // hbase-0.94.3-mdh1.1.0.jar
     );
 
     Job job = new Job(conf, "CodeLab-Wordcount");

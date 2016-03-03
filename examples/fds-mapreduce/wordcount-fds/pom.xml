@@ -109,6 +109,14 @@
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -185,9 +193,12 @@
      </profile>
      <profile>
        <id>hadoop2.4</id>
+       <activation>
+         <activeByDefault>true</activeByDefault>
+       </activation>
        <properties>
          <hadoop.client.version>2.4.0</hadoop.client.version>
-         <galaxy.hadoop.version>1.5-SNAPSHOT</galaxy.hadoop.version>
+         <galaxy.hadoop.version>1.6-SNAPSHOT</galaxy.hadoop.version>
          <hbase.version>0.94.3</hbase.version>
        </properties>
      </profile>

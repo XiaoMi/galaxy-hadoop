@@ -4,24 +4,22 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Date;
 
 import com.google.common.base.Preconditions;
-import com.xiaomi.infra.galaxy.fds.client.FDSClientConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 
-import com.xiaomi.infra.galaxy.fds.auth.XiaomiHeader;
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDS;
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
+import com.xiaomi.infra.galaxy.fds.client.auth.XiaomiHeader;
 import com.xiaomi.infra.galaxy.fds.client.credential.BasicFDSCredential;
 import com.xiaomi.infra.galaxy.fds.client.credential.GalaxyFDSCredential;
+import com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException;
 import com.xiaomi.infra.galaxy.fds.client.model.FDSObject;
 import com.xiaomi.infra.galaxy.fds.client.model.FDSObjectListing;
-import com.xiaomi.infra.galaxy.fds.exception.GalaxyFDSClientException;
-import com.xiaomi.infra.galaxy.fds.model.FDSObjectMetadata;
+import com.xiaomi.infra.galaxy.fds.client.model.FDSObjectMetadata;
 
 public class FDSFileSystemStore implements FileSystemStore {
   private static final Log LOG =
@@ -42,11 +40,6 @@ public class FDSFileSystemStore implements FileSystemStore {
             fdsCredential.getAccessKey(), fdsCredential.getAccessSecret());
 
     // Use the following Configuration object to configure the Galaxy FDS.
-    URL resource = conf.getClassLoader().getResource("galaxy-site.xml");
-    String fdsServer = conf.get(GalaxyFDSClient.GALAXY_FDS_SERVER_BASE_URI_KEY);
-    if (fdsServer == null || fdsServer.isEmpty()) {
-      throw new IOException("Invalid FDS server set: " + fdsServer);
-    }
 
     // URI eg, fds://ID:SECRET@BUCKET/object
     bucket = uri.getHost();

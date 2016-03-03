@@ -9,8 +9,8 @@ import org.apache.hadoop.conf.Configuration;
  */
 public class FDSConfiguration {
 
-  public static String GALAXY_FDS_SERVER_BASE_URI_KEY =
-      GalaxyFDSClient.GALAXY_FDS_SERVER_BASE_URI_KEY;
+  public static String GALAXY_FDS_SERVER_ENABLE_HTTPS =
+      "galaxy.fds.server.enableHttps";
 
   public static String GALAXY_FDS_SERVER_ENABLE_CDN_FOR_UPLOAD =
       "galaxy.fds.server.enableCdnForUpload";
@@ -42,12 +42,8 @@ public class FDSConfiguration {
   public static final String GALAXY_FDS_ACCESS_SECRET = "fs.fds.AccessSecret";
 
   public static FDSClientConfiguration getFdsClientConfig(Configuration conf) {
-    String fdsServer = conf.get(GALAXY_FDS_SERVER_BASE_URI_KEY);
 
-    boolean enableHttps = false;
-    if (fdsServer.startsWith("https://")) {
-      enableHttps = true;
-    }
+    boolean enableHttps = conf.getBoolean(GALAXY_FDS_SERVER_ENABLE_HTTPS, false);
     boolean enableCdnForUpload = conf.getBoolean(
         GALAXY_FDS_SERVER_ENABLE_CDN_FOR_UPLOAD,
         DEFAULT_GALAXY_FDS_SERVER_ENABLE_CDN_FOR_UPLOAD);

@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
 key="" # your AppKey
-secret="" # your AppSecret 
-bucket="" # your bucket created in fds 
-input="input.dat"  # change to your input, it can be a directory or a file 
+secret="" # your AppSecret
+bucket="" # your bucket created in fds
+input="input2"  # change to your input, it can be a directory or a file
 output="test" # change to your output, result will generated in this dir which will be created at first if not exists.
+
+HADOOP_HOME="" # set your hadoop home
+
+if [ ! -z "$HADOOP_HOME" ];then
+  export CLASSPATH_PREFIX=$CLASSPATH_PREFIX:$HADOOP_HOME/conf:$HADOOP_HOME/etc/hadoop
+fi
 
 # ------ run in local mode with input data in fds ------
 # sh target/wordcount-fds-1.0-SNAPSHOT/bin/wordcount.sh -Dmapreduce.job.user.classpath.first=true -conf job-local.xml fds://$key:$secret@$bucket/$input fds://$key:$secret@$bucket/$output

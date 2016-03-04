@@ -19,6 +19,12 @@
       <groupId>com.xiaomi.infra.galaxy</groupId>
       <artifactId>galaxy-client-java</artifactId>
       <version>${galaxy.sds.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
       <dependency>
       <groupId>com.xiaomi.infra.galaxy</groupId>

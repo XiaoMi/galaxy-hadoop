@@ -36,8 +36,7 @@ public class SDSTableRecordReader extends RecordReader<NullWritable, SDSRecordWr
     scanRequest.setStartKey(galaxySplit.getStartRow())
         .setStopKey(galaxySplit.getStopRow())
         .setInGlobalOrder(false)
-        .setCacheResult(false)
-        .setScanInOneSplit(true);
+        .setCacheResult(false);
 
     scanner = new TableScanner(tableClient, scanRequest);
     iterator = scanner.iterator();

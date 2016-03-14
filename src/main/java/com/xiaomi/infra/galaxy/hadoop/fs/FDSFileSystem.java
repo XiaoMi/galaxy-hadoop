@@ -189,7 +189,7 @@ public class FDSFileSystem extends FileSystem {
   @Override
   public void initialize(URI uri, Configuration conf) throws IOException {
     super.initialize(uri, conf);
-    this.uri = URI.create(uri.getScheme() + "://" + uri.getAuthority());
+    this.uri = URI.create(uri.getScheme() + "://" + uri.getRawAuthority());
     this.workingDir =
             new Path("/user", System.getProperty("user.name")).makeQualified(this);
     store = new FDSFileSystemStore();

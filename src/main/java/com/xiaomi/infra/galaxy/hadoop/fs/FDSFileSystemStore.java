@@ -27,6 +27,7 @@ public class FDSFileSystemStore implements FileSystemStore {
 
   private Configuration conf;
   private GalaxyFDS fdsClient;
+  private String region;
   private String bucket;
 
   @Override
@@ -41,10 +42,24 @@ public class FDSFileSystemStore implements FileSystemStore {
 
     // Use the following Configuration object to configure the Galaxy FDS.
 
-    // URI eg, fds://ID:SECRET@BUCKET/object
-    bucket = uri.getHost();
+    // URI eg, fds://ID:SECRET@REGION-BUCKET/object
+    initializeRegionBucketInfo(uri, conf);
 
     fdsClient = new GalaxyFDSClient(credential, FDSConfiguration.getFdsClientConfig(conf));
+  }
+
+  private void initializeRegionBucketInfo(URI uri, Configuration conf) {
+    String regionBucket = uri.getHost();
+    Preconditions.checkArgument(regionBucket != null && regionBucket.length() > 0,
+        "regionBucket in uri does not exist, uri: " + uri);
+    if (regionBucket.contains("-")) {
+      String[] parts = regionBucket.split("-");
+      region = Preconditions.checkNotNull(parts[0], "region is null, uri: " + uri);
+      bucket = Preconditions.checkNotNull(parts[1], "bucket is null, uri: " + uri);
+      conf.set(FDSConfiguration.GALAXY_FDS_SERVER_REGION, region);
+    } else {
+      bucket = regionBucket;
+    }
   }
 
   @Override

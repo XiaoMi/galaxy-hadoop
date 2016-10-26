@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 key="" # your AppKey
-secret="" # your AppSecret
+secret="" # your AppSecret, escape '/' with "%2F"
 region="" # fds region
-bucket="" # your bucket created in fds
+bucket="" # your bucket created in fds, bucket name should not contain '.'
 input="input2"  # change to your input, it can be a directory or a file
 output="test" # change to your output, result will generated in this dir which will be created at first if not exists.
 
@@ -29,7 +29,7 @@ fi
 # sh target/wordcount-fds-1.0-SNAPSHOT/bin/wordcount.sh -Dmapreduce.job.user.classpath.first=true -conf job-local.xml fds://$key:$secret@$bucket/$input fds://$key:$secret@$bucket/$output
 
 # ------- run in distributed mode and specify fds region ------
-sh target/wordcount-fds-1.0-SNAPSHOT/bin/wordcount.sh -Dmapreduce.job.user.classpath.first=true -conf job-yarn.xml fds://$key:$secret@$region-$bucket/$input fds://$key:$secret@$region-$bucket/$output
+sh target/wordcount-fds-1.0-SNAPSHOT/bin/wordcount.sh -Dmapreduce.job.user.classpath.first=true -conf job-yarn.xml fds://$key:$secret@$bucket.$region/$input fds://$key:$secret@$bucket.$region/$output
 
 
 

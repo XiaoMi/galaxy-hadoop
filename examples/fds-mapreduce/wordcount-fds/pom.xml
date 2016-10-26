@@ -198,7 +198,7 @@
        </activation>
        <properties>
          <hadoop.client.version>2.4.0</hadoop.client.version>
-         <galaxy.hadoop.version>1.6-SNAPSHOT</galaxy.hadoop.version>
+         <galaxy.hadoop.version>1.8-SNAPSHOT</galaxy.hadoop.version>
          <hbase.version>0.94.3</hbase.version>
        </properties>
      </profile>

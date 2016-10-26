@@ -1,7 +1,8 @@
 package com.xiaomi.infra.galaxy.hadoop.fs;
 
 import com.xiaomi.infra.galaxy.fds.client.FDSClientConfiguration;
-import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
+
+import com.google.common.base.Strings;
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -27,6 +28,11 @@ public class FDSConfiguration {
 
   public static String DEFAULT_GALAXY_FDS_SERVER_REGION = "";
 
+  public static final String GALAXY_FDS_SERVER_ENDPOINT =
+      "galaxy.fds.server.endpoint";
+
+  public static String DEFAULT_GALAXY_FDS_SERVER_ENDPOINT = null;
+
   public static String GALAXY_FDS_SERVER_ENABLE_METRICS =
       "galaxy.fds.server.enableMetrics";
 
@@ -36,6 +42,11 @@ public class FDSConfiguration {
       "galaxy.fds.server.enableMD5Calculate";
 
   public static boolean DEFAULT_FDS_SERVER_ENABLE_MD5CALCULATE = false;
+
+  public static String GALAXY_FDS_REGIONS = "galaxy.fds.regions";
+
+  public static String DEFAULT_GALAXY_FDS_REGIONS =
+      "cnbj0;cnbj1;cnbj2;awsbj0;awsusor0;awssgp0;awsde0";
 
   public static final String GALAXY_FDS_ACCESS_KEY = "fs.fds.AccessKey";
 
@@ -59,11 +70,19 @@ public class FDSConfiguration {
 
     String regionName = conf.get(FDSConfiguration.GALAXY_FDS_SERVER_REGION,
         DEFAULT_GALAXY_FDS_SERVER_REGION);
+    String endpoint = conf.get(FDSConfiguration.GALAXY_FDS_SERVER_ENDPOINT,
+        DEFAULT_GALAXY_FDS_SERVER_ENDPOINT);
 
     FDSClientConfiguration fdsConfig = new FDSClientConfiguration();
+
+    if (!Strings.isNullOrEmpty(endpoint)) {
+      fdsConfig.setEndpoint(endpoint);
+    }
+
     if (!regionName.equals("")) {
       fdsConfig.setRegionName(regionName);
     }
+
     fdsConfig.enableHttps(enableHttps);
     fdsConfig.enableCdnForUpload(enableCdnForUpload);
     fdsConfig.enableCdnForDownload(enableCdnForDownload);

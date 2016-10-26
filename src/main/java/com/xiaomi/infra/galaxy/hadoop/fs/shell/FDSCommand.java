@@ -15,10 +15,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.Command;
 
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Grant;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.GrantType;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Permission;
+import com.xiaomi.infra.galaxy.fds.model.AccessControlList;
 
 public abstract class FDSCommand extends Command {
 
@@ -64,15 +61,15 @@ public abstract class FDSCommand extends Command {
   }
 
   protected static String formatAclInfo(AccessControlList acl) {
-    List<Grant> grantList = acl.getGrantList();
+    List<AccessControlList.Grant> grantList = acl.getGrantList();
     StringBuilder result = new StringBuilder();
 
-    for (Grant g : grantList) {
+    for (AccessControlList.Grant g : grantList) {
       if (!result.toString().isEmpty()) {
         result.append(",");
       }
 
-      if (GrantType.GROUP.equals(g.getType())) {
+      if (AccessControlList.GrantType.GROUP.equals(g.getType())) {
         result.append("G");
       } else {
         result.append("U");
@@ -83,23 +80,23 @@ public abstract class FDSCommand extends Command {
     return result.toString();
   }
 
-  protected static Grant parseGrantFromString(String grantStr) {
+  protected static AccessControlList.Grant parseGrantFromString(String grantStr) {
     String[] token = grantStr.split(":");
     if (token.length != 3) {
       return null;
     }
 
-    GrantType grantType;
+    AccessControlList.GrantType grantType;
     if ("U".equals(token[0])) {
-      grantType = GrantType.USER;
+      grantType = AccessControlList.GrantType.USER;
     } else if ("G".equals(token[0])) {
-      grantType = GrantType.GROUP;
+      grantType = AccessControlList.GrantType.GROUP;
     } else {
       return null;
     }
 
     String granteeId = token[1];
-    Permission perm = Permission.valueOf(token[2]);
-    return new Grant(granteeId, perm, grantType);
+    AccessControlList.Permission perm = AccessControlList.Permission.valueOf(token[2]);
+    return new AccessControlList.Grant(granteeId, perm, grantType);
   }
 }

@@ -7,7 +7,7 @@ import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 
 import com.xiaomi.infra.galaxy.fds.client.model.FDSObjectListing;
-import com.xiaomi.infra.galaxy.fds.client.model.FDSObjectMetadata;
+import com.xiaomi.infra.galaxy.fds.model.FDSObjectMetadata;
 
 interface FileSystemStore {
   void initialize(URI uri, Configuration conf) throws IOException;

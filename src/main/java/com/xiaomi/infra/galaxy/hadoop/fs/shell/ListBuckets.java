@@ -10,7 +10,7 @@ import org.apache.commons.cli.OptionBuilder;
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
 import com.xiaomi.infra.galaxy.fds.client.model.FDSBucket;
 import com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList;
+import com.xiaomi.infra.galaxy.fds.model.AccessControlList;
 
 public class ListBuckets extends FDSCommand {
 

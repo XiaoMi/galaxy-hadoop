@@ -64,6 +64,11 @@
   </property>
 
   <property>
+    <name>galaxy.fds.regions</name>
+    <value></value>
+  </property>
+
+  <property>
     <name>galaxy.mr.sds.secret.id</name>
     <value>${your_sds_secret_id}</value>
   </property>
@@ -102,4 +107,5 @@
     <name>galaxy.mr.sds.scan.limit</name>
     <value>200</value>
   </property>
+
 </configuration>

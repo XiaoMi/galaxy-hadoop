@@ -9,8 +9,7 @@ import org.apache.commons.cli.OptionBuilder;
 
 import com.xiaomi.infra.galaxy.fds.client.GalaxyFDSClient;
 import com.xiaomi.infra.galaxy.fds.client.exception.GalaxyFDSClientException;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList;
-import com.xiaomi.infra.galaxy.fds.client.model.AccessControlList.Grant;
+import com.xiaomi.infra.galaxy.fds.model.AccessControlList;
 
 public class AddObjectGrant extends FDSCommand {
 
@@ -45,7 +44,7 @@ public class AddObjectGrant extends FDSCommand {
       String objectName = values[1];
       String grantStr = values[2];
 
-      Grant grant = parseGrantFromString(grantStr);
+      AccessControlList.Grant grant = parseGrantFromString(grantStr);
       AccessControlList acl = new AccessControlList();
       acl.addGrant(grant);
       try {

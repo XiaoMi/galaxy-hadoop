@@ -34,7 +34,8 @@ public class FDSFileSystem extends FileSystem {
 
   public static final Log LOG =
           LogFactory.getLog(FDSFileSystem.class);
-  private static final String FOLDER_SUFFIX = "/_$folder$";
+  private static final String FOLDER_SUFFIX = "/";
+  private static final String LEGACY_FOLDER_SUFFIX = "/_$folder$";
 
   static class FDSDataInputStream extends FSInputStream {
 
@@ -357,7 +358,11 @@ public class FDSFileSystem extends FileSystem {
       }
     }
 
-    store.delete(object + FOLDER_SUFFIX);
+    try {
+      store.delete(object + FOLDER_SUFFIX);
+    } catch (IOException ioe) {
+      store.delete(object + LEGACY_FOLDER_SUFFIX);
+    }
   }
 
   @Override
@@ -377,7 +382,8 @@ public class FDSFileSystem extends FileSystem {
 
       for (FDSObjectSummary fdsObjectSummary : listing.getObjectSummaries()) {
         String objectName = fdsObjectSummary.getObjectName();
-        if (objectName.equals(object + FOLDER_SUFFIX)) {
+        if (objectName.equals(object + FOLDER_SUFFIX) ||
+            objectName.equals(object + LEGACY_FOLDER_SUFFIX)) {
           // placeholder for directory itself
           isDir = true;
           continue;
@@ -474,11 +480,12 @@ public class FDSFileSystem extends FileSystem {
 
     if(LOG.isDebugEnabled()) {
       LOG.debug("getFileStatus getting metadata for object '" + object +
-              FOLDER_SUFFIX + "'");
+              FOLDER_SUFFIX + "' or '" + LEGACY_FOLDER_SUFFIX + "'");
     }
 
     // test directory placeholder
-    if (store.getMetadata(object + FOLDER_SUFFIX) != null) {
+    if (store.getMetadata(object + FOLDER_SUFFIX) != null ||
+        store.getMetadata(object + LEGACY_FOLDER_SUFFIX) != null) {
       return newDirectory(absolutePath);
     }
 

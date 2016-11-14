@@ -361,7 +361,12 @@ public class FDSFileSystem extends FileSystem {
     try {
       store.delete(object + FOLDER_SUFFIX);
     } catch (IOException ioe) {
-      store.delete(object + LEGACY_FOLDER_SUFFIX);
+      if (ioe.toString().contains("Object Not Found") ||
+          ioe.toString().contains("status=404")) {
+        store.delete(object + LEGACY_FOLDER_SUFFIX);
+      } else {
+        throw ioe;
+      }
     }
   }
 

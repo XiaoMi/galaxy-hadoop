@@ -167,6 +167,9 @@ public class FDSFileSystem extends FileSystem {
         }
       }
       closed = true;
+      if (lastException != null) {
+        throw lastException;
+      }
     }
   }
 
@@ -219,8 +222,17 @@ public class FDSFileSystem extends FileSystem {
                                    boolean overwrite, int bufferSize,
                                    short replication, long blockSize,
                                    Progressable progressable) throws IOException {
-    if (exists(path) && !overwrite) {
-      throw new IOException("File already exists:" + path);
+    if (exists(path)) {
+      if (overwrite) {
+        delete(path, true);
+      } else {
+        throw new IOException("File already exists:" + path);
+      }
+    }
+    Path parent = path.getParent();
+    if (!exists(parent)) {
+      // The parents folder markers should be created, see S3 implementation
+      mkdirs(parent);
     }
 
     if(LOG.isDebugEnabled()) {
@@ -307,12 +319,16 @@ public class FDSFileSystem extends FileSystem {
 
       for (FDSObjectSummary fdsObjectSummary : listing.getObjectSummaries()) {
         Path srcFilePath = makeQualified(objectToPath(fdsObjectSummary.getObjectName()));
-        Path dstFilePath = new Path(dstPath,
-            srcPathUri.relativize(srcFilePath.toUri()).getPath());
+        String child = srcPathUri.relativize(srcFilePath.toUri()).getPath();
+        Path dstFilePath = child.isEmpty() ? dstPath : new Path(dstPath, child);
         if (LOG.isDebugEnabled()) {
           LOG.debug("Rename file path src: " + srcFilePath + " dst: " + dstFilePath);
         }
-        store.rename(fdsObjectSummary.getObjectName(), pathToObject(dstFilePath));
+        if (fdsObjectSummary.getObjectName().endsWith(FOLDER_SUFFIX)) {
+          store.rename(fdsObjectSummary.getObjectName(), pathToObject(dstFilePath) + FOLDER_SUFFIX);
+        } else {
+          store.rename(fdsObjectSummary.getObjectName(), pathToObject(dstFilePath));
+        }
       }
 
     } while (listing.isTruncated());

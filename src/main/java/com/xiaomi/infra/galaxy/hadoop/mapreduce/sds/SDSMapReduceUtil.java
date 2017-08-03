@@ -38,13 +38,13 @@ public class SDSMapReduceUtil {
     initSDSTableMapperJob(scans, mapper, outputKeyClass, outputValueClass, true, job);
   }
 
-  public static void initSDSTableMapperJob(List<SDSTableScan> scans,
-                                           Class<? extends SDSMapper> mapper,
-                                           Class<? extends WritableComparable> outputKeyClass,
-                                           Class<? extends Writable> outputValueClass,
-                                           boolean addDependencyJars, Job job) throws IOException {
-    initMapperJob(mapper, outputKeyClass, outputValueClass, addDependencyJars, job);
-    job.setInputFormatClass(SDSTableInputFormat.class);
+  public static void setSDSTableInputConf(Configuration conf, SDSTableScan scan) throws IOException {
+    List<SDSTableScan> scans = new ArrayList<SDSTableScan>();
+    scans.add(scan);
+    setSDSTableInputConf(conf, scans);
+  }
+
+  public static void setSDSTableInputConf(Configuration conf, List<SDSTableScan> scans) throws IOException {
     List<String> scanStrings = new ArrayList<String>();
     for (SDSTableScan scan : scans) {
       // use default scan limit if not set
@@ -52,13 +52,28 @@ public class SDSMapReduceUtil {
         scan.getScanRequest().setLimit(SDSConfiguration.DEFAULT_SDS_MAPREDUCE_SCAN_LIMIT);
       }
 
-      scan.getSDSProperty().checkSanityAndSet(job.getConfiguration());
+      scan.getSDSProperty().checkSanityAndSet(conf);
       scanStrings.add(convertTableScanToString(scan));
     }
 
-    job.getConfiguration().setStrings(SDSTableInputFormat.SCANS,
-                                      scanStrings.toArray(new String[scanStrings.size()]));
+    conf.setStrings(SDSTableInputFormat.SCANS,
+        scanStrings.toArray(new String[scanStrings.size()]));
+  }
 
+  public static void setSDSTableOutputConf(Configuration conf, SDSTableOutput tableOutput) throws IOException {
+    tableOutput.getSDSProperty().checkSanityAndSet(conf);
+    conf.set(SDSTableOutputFormat.OUTPUT_TABLE, SDSMapReduceUtil.convertTableOuputToString(tableOutput));
+  }
+
+  public static void initSDSTableMapperJob(List<SDSTableScan> scans,
+                                           Class<? extends SDSMapper> mapper,
+                                           Class<? extends WritableComparable> outputKeyClass,
+                                           Class<? extends Writable> outputValueClass,
+                                           boolean addDependencyJars, Job job) throws IOException {
+    initMapperJob(mapper, outputKeyClass, outputValueClass, addDependencyJars, job);
+    job.setInputFormatClass(SDSTableInputFormat.class);
+
+    setSDSTableInputConf(job.getConfiguration(), scans);
     // TODO: dump galaxy sds server configuration to support cross cluster
   }
 

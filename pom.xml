@@ -192,6 +192,7 @@
         <configuration>
           <artifactSet>
             <includes>
+              <include>com.xiaomi.infra.galaxy:galaxy-sds-client</include>
               <include>com.xiaomi.infra.galaxy:galaxy-client-java</include>
               <include>com.xiaomi.infra.galaxy:galaxy-thrift-api</include>
             </includes>

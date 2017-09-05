@@ -3,11 +3,14 @@ package com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSMapReduceUtil;
 import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.SDSRecordWritable;
 import com.xiaomi.infra.galaxy.sds.thrift.AdminService;
 import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest;
+import com.xiaomi.infra.galaxy.sds.thrift.GlobalSecondaryIndexSpec;
+import com.xiaomi.infra.galaxy.sds.thrift.TableSpec;
 import com.xiaomi.infra.galaxy.sds.thrift.TableSplit;
 import libthrift091.TException;
 import org.apache.hadoop.conf.Configurable;
@@ -60,9 +63,25 @@ public class SDSTableInputFormat extends InputFormat<NullWritable, SDSRecordWrit
       AdminService.Iface adminClient = sdsProperty.formAdminClient();
 
       try {
-        List<TableSplit> tableSplits = adminClient.getTableSplits(scanRequest.getTableName(),
-                                                                  scanRequest.getStartKey(),
-                                                                  scanRequest.getStopKey());
+        List<TableSplit> tableSplits;
+          if(scanRequest.getIndexName()==null){
+            tableSplits = adminClient.getTableSplits(scanRequest.getTableName(),
+                    scanRequest.getStartKey(),
+                    scanRequest.getStopKey());
+          }else {
+            String tableName = scanRequest.getTableName();
+            String indexName = scanRequest.getIndexName();
+            TableSpec tableSpec = adminClient.describeTable(tableName);
+            Map<String, GlobalSecondaryIndexSpec> globalSecondaryIndexes = tableSpec.getSchema().getGlobalSecondaryIndexes();
+            if (globalSecondaryIndexes == null || !globalSecondaryIndexes.containsKey(indexName)) {
+               throw new IOException("Global Index Name is not exist; table name = " + tableName +
+                                    "index name = " + indexName);
+            }
+            tableSplits = adminClient.getIndexTableSplits(tableName, indexName,
+                    scanRequest.getStartKey(),
+                    scanRequest.getStopKey());
+          }
+
         for (TableSplit tableSplit : tableSplits) {
           splits
               .add(new SDSTableSplit(scan, tableSplit.getStartKey(), tableSplit.getStopKey(), ""));

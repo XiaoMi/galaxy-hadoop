@@ -1,9 +1,10 @@
-package com.xiaomi.infra.galaxy.hadoop.example
+package com.xiaomi.infra.galaxy.hadoop
 
 import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.table._
 import com.xiaomi.infra.galaxy.hadoop.mapreduce.sds.{SDSConfiguration, SDSMapReduceUtil, SDSRecordWritable}
 import com.xiaomi.infra.galaxy.sds.thrift.ScanRequest
 import org.apache.hadoop.io.NullWritable
+
 import org.apache.spark.{SparkConf, SparkContext}
 
 /*
@@ -22,7 +23,7 @@ object SparkSDSTableExample {
     val sc = new SparkContext(sparkConf)
 
     val Array(inputTable, outputTable) = args
-  
+
     // sds scan
     val sdsProperty = new SDSTableProperty
     sdsProperty.setEndpoint("endpoint")
@@ -39,10 +40,10 @@ object SparkSDSTableExample {
     SDSMapReduceUtil.setSDSTableInputConf(hadoopConf, scan)
 
     val inputRDD = sc.newAPIHadoopRDD(hadoopConf, classOf[SDSTableInputFormat], classOf[NullWritable], classOf[SDSRecordWritable])
-  
+
     val recordNum = inputRDD.values.map(record => 1).sum()
     System.out.println("SDS Table: " + inputTable + " record num: " + recordNum)
- 
+
     SDSMapReduceUtil.setSDSTableOutputConf(hadoopConf, new SDSTableOutput(outputTable, sdsProperty))
 
     inputRDD.saveAsNewAPIHadoopFile("", classOf[NullWritable], classOf[SDSRecordWritable], classOf[SDSTableOutputFormat])

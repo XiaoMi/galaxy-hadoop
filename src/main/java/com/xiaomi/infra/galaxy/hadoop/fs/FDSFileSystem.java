@@ -21,6 +21,8 @@ import org.apache.hadoop.fs.FSInputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.fs.permission.AclStatus;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.util.Progressable;
 
@@ -570,5 +572,35 @@ public class FDSFileSystem extends FileSystem {
       return path;
     }
     return new Path(workingDir, path);
+  }
+
+  @Override
+  public void modifyAclEntries(Path path, List<AclEntry> aclSpec) throws IOException {
+    return;
+  }
+
+  @Override
+  public void removeAclEntries(Path path, List<AclEntry> aclSpec) throws IOException {
+    return;
+  }
+
+  @Override
+  public void removeDefaultAcl(Path path) throws IOException {
+    return;
+  }
+
+  @Override
+  public void removeAcl(Path path) throws IOException {
+    return;
+  }
+
+  @Override
+  public void setAcl(Path path, List<AclEntry> aclSpec) throws IOException {
+    return;
+  }
+
+  @Override
+  public AclStatus getAclStatus(Path path) throws IOException {
+    return new AclStatus.Builder().build();
   }
 }

@@ -52,6 +52,12 @@ public class FDSConfiguration {
 
   public static final String GALAXY_FDS_ACCESS_SECRET = "fs.fds.AccessSecret";
 
+  private static final String ENDPOINT_SUFFIX = ".fds.api.xiaomi.com";
+
+  public static String GALAXY_FDS_SERVER_ENABLE_THIRD_PART =
+      "galaxy.fds.server.enable.third.part";
+  public static boolean DEFAULT_GALAXY_FDS_SERVER_ENABLE_THIRD_PART = false;
+
   public static FDSClientConfiguration getFdsClientConfig(Configuration conf) {
 
     boolean enableHttps = conf.getBoolean(GALAXY_FDS_SERVER_ENABLE_HTTPS, false);
@@ -73,16 +79,11 @@ public class FDSConfiguration {
     String endpoint = conf.get(FDSConfiguration.GALAXY_FDS_SERVER_ENDPOINT,
         DEFAULT_GALAXY_FDS_SERVER_ENDPOINT);
 
-    FDSClientConfiguration fdsConfig = new FDSClientConfiguration();
-
-    if (!Strings.isNullOrEmpty(endpoint)) {
-      fdsConfig.setEndpoint(endpoint);
+    if(endpoint == null){
+      endpoint = regionName + ENDPOINT_SUFFIX;
     }
 
-    if (!regionName.equals("")) {
-      fdsConfig.setRegionName(regionName);
-    }
-
+    FDSClientConfiguration fdsConfig = new FDSClientConfiguration(endpoint);
     fdsConfig.enableHttps(enableHttps);
     fdsConfig.enableCdnForUpload(enableCdnForUpload);
     fdsConfig.enableCdnForDownload(enableCdnForDownload);

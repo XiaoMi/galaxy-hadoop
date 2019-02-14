@@ -33,6 +33,7 @@ public class FDSFileSystemStore implements FileSystemStore {
   protected FDSClientConfiguration fdsClientConfiguration;
   private GalaxyFDS fdsClient;
   protected String bucket;
+  private boolean enableThirdPart = false;
   private static final Set<String> VALID_REGION_SET = new HashSet<String>();
   static {
     Configuration.addDefaultResource("galaxy-site.xml");
@@ -64,6 +65,8 @@ public class FDSFileSystemStore implements FileSystemStore {
 
     fdsClientConfiguration = FDSConfiguration.getFdsClientConfig(conf);
     fdsClient = new GalaxyFDSClient(credential, fdsClientConfiguration);
+    enableThirdPart = conf.getBoolean(FDSConfiguration.GALAXY_FDS_SERVER_ENABLE_THIRD_PART,
+        FDSConfiguration.DEFAULT_GALAXY_FDS_SERVER_ENABLE_THIRD_PART);
   }
 
   protected void initializeRegionBucketInfo(URI uri, Configuration conf) {
@@ -167,7 +170,12 @@ public class FDSFileSystemStore implements FileSystemStore {
   @Override
   public InputStream getObject(String object, long pos) throws IOException {
     try {
-      FDSObject fdsObject = fdsClient.getObject(bucket, object, pos);
+      FDSObject fdsObject = null;
+      if( enableThirdPart ) {
+        fdsObject = fdsClient.getObjectFromThirdParty(bucket, object, pos);
+      } else {
+        fdsObject = fdsClient.getObject(bucket, object, pos);
+      }
       return fdsObject.getObjectContent();
     } catch (GalaxyFDSClientException e) {
       throw new IOException(e);

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<configuration>
+
+  <property>
+    <name>galaxy.fds.server.enableHttps</name>
+    <value>true</value>
+  </property>
+
+  <!-- 不同region的fds数据,需要修改region配置 -->
+  <!--
+  <property>
+    <name>galaxy.fds.server.region</name>
+    <value>awsbj0</value>
+    <description>北京2区</description>
+  </property>
+  -->
+  <property>
+    <name>galaxy.fds.server.region</name>
+    <value></value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableCdnForUpload</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableCdnForDownload</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableMD5Calculate</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>galaxy.fds.server.enableMetrics</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>fs.fds.AccessKey</name>
+    <value>${your_fds_access_key}</value>
+  </property>
+
+  <property>
+    <name>fs.fds.AccessSecret</name>
+    <value>${your_fds_access_secret}</value>
+  </property>
+
+</configuration>

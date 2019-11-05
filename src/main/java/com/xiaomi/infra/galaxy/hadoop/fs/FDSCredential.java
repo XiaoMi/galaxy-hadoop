@@ -5,8 +5,8 @@ import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 
 public class FDSCredential {
-  public static final String ACCESS_KEY_PROPERTY = "fs.fds.AccessKey";
-  public static final String ACCESS_SECRET_PROPERTY = "fs.fds.AccessSecret";
+  static final String ACCESS_KEY_PROPERTY = "fs.fds.AccessKey";
+  static final String ACCESS_SECRET_PROPERTY = "fs.fds.AccessSecret";
 
   private String accessKey;
   private String accessSecret;
@@ -43,7 +43,7 @@ public class FDSCredential {
     }
 
     if (accessKey == null && accessSecret == null) {
-      throw new IllegalArgumentException("AWS " +
+      throw new IllegalArgumentException("FDS " +
               "Access Key and Access Secret " +
               "must be specified as the " +
               "username or password " +
@@ -53,13 +53,13 @@ public class FDSCredential {
               ACCESS_SECRET_PROPERTY +
               " properties (respectively).");
     } else if (accessKey == null) {
-      throw new IllegalArgumentException("AWS " +
+      throw new IllegalArgumentException("FDS " +
               "Access Key ID must be specified " +
               "as the username of a fds " +
               "URL, or by setting the " +
               ACCESS_KEY_PROPERTY + " property.");
     } else if (accessSecret == null) {
-      throw new IllegalArgumentException("AWS " +
+      throw new IllegalArgumentException("FDS " +
               "Secret Access Key must be " +
               "specified as the password of a " +
               "fds URL, or by setting the " +

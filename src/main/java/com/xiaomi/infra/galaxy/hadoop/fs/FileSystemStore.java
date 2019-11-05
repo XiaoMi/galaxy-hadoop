@@ -35,4 +35,6 @@ interface FileSystemStore {
   void storeEmptyFile(String object) throws IOException;
 
   void rename(String srcObject, String dstObject) throws IOException;
+
+  boolean checkObjectExist(String object) throws IOException;
 }

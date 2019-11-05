@@ -10,6 +10,8 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.xiaomi.infra.galaxy.fds.client.AutoRetryClient;
+import com.xiaomi.infra.galaxy.fds.client.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -64,7 +66,10 @@ public class FDSFileSystemStore implements FileSystemStore {
     initializeRegionBucketInfo(uri, conf);
 
     fdsClientConfiguration = FDSConfiguration.getFdsClientConfig(conf);
-    fdsClient = new GalaxyFDSClient(credential, fdsClientConfiguration);
+    int retryCounts = conf.getInt(FDSConfiguration.GALAXY_FDS_RETRY_COUNTS,
+        FDSConfiguration.DEFAULT_GALAXY_FDS_RETRY_COUNTS);
+
+    fdsClient = AutoRetryClient.getAutoRetryClient(new GalaxyFDSClient(credential, fdsClientConfiguration), retryCounts);
     enableThirdPart = conf.getBoolean(FDSConfiguration.GALAXY_FDS_SERVER_ENABLE_THIRD_PART,
         FDSConfiguration.DEFAULT_GALAXY_FDS_SERVER_ENABLE_THIRD_PART);
   }
@@ -120,7 +125,12 @@ public class FDSFileSystemStore implements FileSystemStore {
     try {
       metadata = fdsClient.getObjectMetadata(bucket, object);
     } catch (GalaxyFDSClientException e) {
-      return null;
+      Integer statusCode = Utils.getErrorCode(e.getMessage());
+      if(statusCode != null && statusCode == 404) {
+        return null;
+      }
+      String errorMsg = "failed to get object metadata, objectName:" + object;
+      throw new IOException(errorMsg, e);
     }
 
     long contentLength = Long.parseLong(metadata.getRawMetadata()
@@ -216,6 +226,15 @@ public class FDSFileSystemStore implements FileSystemStore {
   public void rename(String srcObject, String dstObject) throws IOException {
     try {
       fdsClient.renameObject(bucket, srcObject, dstObject);
+    } catch (GalaxyFDSClientException e) {
+      throw new IOException(e);
+    }
+  }
+
+  @Override
+  public boolean checkObjectExist(String object) throws IOException {
+    try {
+      return fdsClient.doesObjectExist(bucket, object);
     } catch (GalaxyFDSClientException e) {
       throw new IOException(e);
     }

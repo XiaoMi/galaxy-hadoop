@@ -63,11 +63,22 @@ public class FDSFileSystem extends FileSystem {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-      int readCnt = in.read(b, off, len);
-      if (readCnt > 0) {
-        pos += readCnt;
+      int readCnt = 0;
+      int totalCnt = 0;
+      while((readCnt = in.read(b, off + totalCnt, len - totalCnt)) >= 0){
+        totalCnt += readCnt;
+        if(totalCnt >= len){
+          break;
+        }
       }
-      return readCnt;
+      if (totalCnt > 0) {
+        pos += totalCnt;
+      }
+
+      if(readCnt == -1 && totalCnt == 0){
+        return -1;
+      }
+      return totalCnt;
     }
 
     @Override
@@ -82,6 +93,7 @@ public class FDSFileSystem extends FileSystem {
       }
       in.close();
       in = store.getObject(object, pos);
+
       this.pos = pos;
     }
 
@@ -204,13 +216,10 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public FSDataInputStream open(Path path, int bufferSize) throws IOException {
+    LOG.info("Opening '" + path + "' for reading");
     FileStatus fileStatus = getFileStatus(path);
     if (fileStatus.isDirectory()) {
       throw new IOException("'" + path + "' is a directory");
-    }
-
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Opening '" + path + "' for reading");
     }
 
     Path absolutePath = makeAbsolute(path);
@@ -224,6 +233,7 @@ public class FDSFileSystem extends FileSystem {
                                    boolean overwrite, int bufferSize,
                                    short replication, long blockSize,
                                    Progressable progressable) throws IOException {
+    LOG.info("create " + path);
     if (exists(path)) {
       if (overwrite) {
         delete(path, true);
@@ -248,12 +258,14 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public FSDataOutputStream append(Path path, int i, Progressable progressable) throws IOException {
+    LOG.info("append " + path);
     throw new IOException("FDSFileSystem:append() not supported");
   }
 
   // WARNING: No atomicity is guaranteed for this operation
   @Override
   public boolean rename(Path srcPath, Path dstPath) throws IOException {
+    LOG.info("rename srcPath:" + srcPath + ", dstPath:" + dstPath);
     if (srcPath.isRoot()) {
       LOG.error("Rename error, source cannot be root");
       return false;
@@ -309,6 +321,7 @@ public class FDSFileSystem extends FileSystem {
   }
 
   private void renameDir(Path srcPath, Path dstPath) throws IOException {
+    LOG.info("renameDir srcPath:" + srcPath + ", dstPath:" + dstPath);
     String srcObject = pathToObject(srcPath);
     URI srcPathUri = makeQualified(srcPath).toUri();
     FDSObjectListing listing = null;
@@ -338,6 +351,7 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public boolean delete(Path path, boolean recursive) throws IOException {
+    LOG.info("delete path:" + path + ", recursive:" + recursive);
     Path absolutePath = makeAbsolute(path);
     String object = pathToObject(path);
     FileStatus fileStatus;
@@ -390,6 +404,7 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public FileStatus[] listStatus(Path path) throws FileNotFoundException, IOException {
+    LOG.info("listStatus, Path:" + path);
     Path absolutePath = makeAbsolute(path);
     String object = pathToObject(absolutePath);
 
@@ -444,6 +459,7 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public boolean mkdirs(Path path, FsPermission fsPermission) throws IOException {
+    LOG.info("mkdirs, Path:" + path);
     Path absolutePath = makeAbsolute(path);
     List<Path> paths = new ArrayList<Path>();
     do {
@@ -481,6 +497,7 @@ public class FDSFileSystem extends FileSystem {
 
   @Override
   public FileStatus getFileStatus(Path path) throws IOException {
+    LOG.info("getFileStatus, path:" + path );
     Path absolutePath = makeAbsolute(path);
     String object = pathToObject(path);
 
@@ -492,12 +509,12 @@ public class FDSFileSystem extends FileSystem {
       LOG.debug("getFileStatus getting metadata for object '" + object+ "'");
     }
 
-    FileMetadata meta = store.getMetadata(object);
-    if (meta != null) {
+    if (store.checkObjectExist(object)) {
       if(LOG.isDebugEnabled()) {
         LOG.debug("getFileStatus returning 'file' for object '" + object +
                 "'");
       }
+      FileMetadata meta = store.getMetadata(object);
       return newFile(meta, absolutePath);
     }
 
@@ -507,8 +524,8 @@ public class FDSFileSystem extends FileSystem {
     }
 
     // test directory placeholder
-    if (store.getMetadata(object + FOLDER_SUFFIX) != null ||
-        store.getMetadata(object + LEGACY_FOLDER_SUFFIX) != null) {
+    if (store.checkObjectExist(object + FOLDER_SUFFIX) ||
+        store.checkObjectExist(object + LEGACY_FOLDER_SUFFIX)) {
       return newDirectory(absolutePath);
     }
 

@@ -11,7 +11,7 @@
     <galaxy.sds.version>1.2.15</galaxy.sds.version>
     <!--<galaxy.fds.version>1.6-SNAPSHOT</galaxy.fds.version>-->
     <galaxy.fds.version>3.0.36</galaxy.fds.version>
-    <junit.version>4.11</junit.version>
+    <junit.version>4.13.1</junit.version>
     <hadoop.version>2.4.0</hadoop.version>
   </properties>
   <scm>

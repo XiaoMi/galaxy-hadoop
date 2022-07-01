@@ -12,7 +12,7 @@
     <!--<galaxy.fds.version>1.6-SNAPSHOT</galaxy.fds.version>-->
     <galaxy.fds.version>3.0.36</galaxy.fds.version>
     <junit.version>4.11</junit.version>
-    <hadoop.version>2.4.0</hadoop.version>
+    <hadoop.version>2.7.0</hadoop.version>
   </properties>
   <scm>
     <url>https://github.com/XiaoMi/galaxy-hadoop.git</url>

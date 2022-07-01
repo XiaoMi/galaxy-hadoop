@@ -10,7 +10,7 @@
 
 
     <properties>
-        <hadoop.version>2.4.0</hadoop.version>
+        <hadoop.version>2.7.0</hadoop.version>
         <galaxy.hadoop.version>1.5-SNAPSHOT</galaxy.hadoop.version>
     </properties>
 

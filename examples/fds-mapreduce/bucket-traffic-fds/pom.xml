@@ -186,7 +186,7 @@
      <profile>
        <id>hadoop2.0</id>
        <properties>
-         <hadoop.client.version>2.0.0-mdh1.2.0-SNAPSHOT</hadoop.client.version>
+         <hadoop.client.version>2.7.0</hadoop.client.version>
          <galaxy.hadoop.version>1.4-SNAPSHOT</galaxy.hadoop.version>
          <hbase.version>0.94.3-mdh1.0.0-SNAPSHOT</hbase.version>
        </properties>
